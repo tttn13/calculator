@@ -1,0 +1,43 @@
+#container {
+    margin: 0;
+}
+
+table {
+    width: 30vw;
+    height: 40vh;
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+table > * {
+    cursor: pointer;
+    text-align: center;
+    color: #ececec;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+}
+
+th {
+    text-align: right;
+    outline: 1px solid;
+    cursor: default;
+    height: 7vh;
+    background-color: #565555;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding-right: 10px;
+}
+
+.cell {
+    background-color: #818181;
+    width: 20em;
+}
+
+.needChange {
+    background-color: #4c4c4c;
+}
