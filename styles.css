@@ -3,9 +3,11 @@
 }
 
 table {
-    width: 30vw;
+    width: 200px;
     height: 40vh;
+    table-layout: fixed;
 }
+
 table tr:last-child td:first-child {
     border-bottom-left-radius: 10px;
 }
@@ -24,18 +26,24 @@ table > * {
 
 th {
     text-align: right;
-    outline: 1px solid;
     cursor: default;
-    height: 7vh;
+    height: 3em;
     background-color: #565555;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     padding-right: 10px;
+    padding-left: 10px;
+    width: 200px;
+    overflow: hidden;
 }
 
 .cell {
     background-color: #818181;
     width: 20em;
+}
+
+.cell:active {
+    background-color: rgb(172, 172, 172);
 }
 
 .needChange {

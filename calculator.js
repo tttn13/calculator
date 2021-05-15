@@ -57,11 +57,15 @@ function displayValue() {
     cells.forEach((cell) => {
         cell.addEventListener('click', function() {
             pressed_char = cell.innerHTML;
-            console.log(pressed_char);
+            console.log("Before:{" + operators_arr.toString() +"}, {"
++ operand_arr.toString()+"}");
+
             if (pressed_char == "+/-") {
                 negateNumber();
+                remove_op_and_operand_pair(operand_arr, operators_arr);
             } else if (pressed_char == "%") {
                 percentageNumber(display_window.innerHTML);
+                remove_op_and_operand_pair(operand_arr, operators_arr);
             } 
             else if (pressed_char == "AC") {
                 operand_build = "";
@@ -69,6 +73,7 @@ function displayValue() {
                 reset_calculator(cell, operand_build, operand_arr, operators_arr);
             } else if (number_is_added(operand_build,pressed_char)) {
                 if (last_operation_is_equal(operators_arr)) {
+                    operand_arr.shift();
                     operand_arr.shift();
                     operators_arr.shift();
                 }
@@ -78,6 +83,7 @@ function displayValue() {
             } else {
                 operators_arr.push(pressed_char);
                 if (common_operators.includes(pressed_char)) {
+                    remove_op_and_operand_pair(operand_arr, operators_arr);
                     if (operators_arr[0] != "=") {
                         operand_arr.push(operand_build);
                     }
@@ -89,12 +95,21 @@ function displayValue() {
                     operand_build = "";
                 }
             }
+            console.log("After:{" + operators_arr.toString() +"}, {"
+            + operand_arr.toString()+"}");
         })
     })
 }
 
+function remove_op_and_operand_pair(operands, operators) {
+    if (last_operation_is_equal(operators)) {
+        operands.shift();
+        operators.shift();
+    }
+}
+
 function last_operation_is_equal(operators) {
-    return operators.length == 1 && operators[0] == "=";
+    return operators.length == 2 && operators[1] == "=";
 }
 
 function deleteFromLeft(array, num) {
@@ -129,10 +144,6 @@ function equal_is_entered(operand_arr,operators_arr) {
     display_window.innerHTML = result;
     operand_arr.push(result);
     operand_arr.shift();
-    operand_arr.shift();
-    operators_arr.shift();
-    
-
 }
 
 function number_is_added(operand_string,char){
