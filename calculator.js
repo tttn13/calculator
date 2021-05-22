@@ -23,6 +23,7 @@ function addContent() {
     console.log(cells);
     cells.forEach((cell, index) => {
         cell.innerHTML = arr[index];
+        cell.id = arr[index];
     })
     //create header as result display 
     var header = calculatorTable.createTHead();
@@ -49,56 +50,63 @@ needChange2.forEach((cell) => {
 
 
 let display_window = document.querySelector('th');
+let operand_build = "";
+let operand_arr = [];
+let operators_arr = [];
 
-function displayValue() {
-    let operand_build = "";
-    let operand_arr = [];
-    let operators_arr = [];
+function setup() {
     cells.forEach((cell) => {
         cell.addEventListener('click', function() {
-            pressed_char = cell.innerHTML;
-            console.log("Before:{" + operators_arr.toString() +"}, {"
-+ operand_arr.toString()+"}");
-
-            if (pressed_char == "+/-") {
-                negateNumber();
-                remove_op_and_operand_pair(operand_arr, operators_arr);
-            } else if (pressed_char == "%") {
-                percentageNumber(display_window.innerHTML);
-                remove_op_and_operand_pair(operand_arr, operators_arr);
-            } 
-            else if (pressed_char == "AC") {
-                operand_build = "";
-                display_window.innerHTML = "";
-                reset_calculator(cell, operand_build, operand_arr, operators_arr);
-            } else if (number_is_added(operand_build,pressed_char)) {
-                if (last_operation_is_equal(operators_arr)) {
-                    operand_arr.shift();
-                    operand_arr.shift();
-                    operators_arr.shift();
-                }
-                operand_build += (pressed_char);
-                display_window.innerHTML = operand_build;
-                
-            } else {
-                operators_arr.push(pressed_char);
-                if (common_operators.includes(pressed_char)) {
-                    remove_op_and_operand_pair(operand_arr, operators_arr);
-                    if (operators_arr[0] != "=") {
-                        operand_arr.push(operand_build);
-                    }
-                    operand_build = "";
-                    operator_is_entered(operand_arr,operators_arr);
-                } else if (pressed_char == "=") {
-                    operand_arr.push(operand_build);
-                    equal_is_entered(operand_arr,operators_arr);
-                    operand_build = "";
-                }
-            }
-            console.log("After:{" + operators_arr.toString() +"}, {"
-            + operand_arr.toString()+"}");
+            pressed_char = cell.innerHTML; 
+            handle_key(pressed_char);    
         })
     })
+
+    var clear_button = document.getElementById('AC');
+    clear_button.addEventListener('dblclick', function () {
+        reset_calculator(operand_build, operand_arr, operators_arr);
+    })
+
+}
+
+function handle_key(pressed_char) {
+    if (pressed_char == "+/-") {
+        negateNumber();
+        remove_op_and_operand_pair(operand_arr, operators_arr);
+    } else if (pressed_char == "%") {
+        percentageNumber(display_window.innerHTML);
+        remove_op_and_operand_pair(operand_arr, operators_arr);
+    } 
+    else if (pressed_char == "AC") {
+        operand_build = "";
+        display_window.innerHTML = "";
+        clearCurrentNumber(operand_build);
+    } else if (number_is_added(operand_build,pressed_char)) {
+        if (last_operation_is_equal(operators_arr)) {
+            operand_arr.shift();
+            operand_arr.shift();
+            operators_arr.shift();
+        }
+        operand_build += (pressed_char);
+        display_window.innerHTML = operand_build;
+        
+    } else {
+        operators_arr.push(pressed_char);
+        if (common_operators.includes(pressed_char)) {
+            remove_op_and_operand_pair(operand_arr, operators_arr);
+            if (operators_arr[0] != "=") {
+                operand_arr.push(operand_build);
+            }
+            operand_build = "";
+            operator_is_entered(operand_arr,operators_arr);
+        } else if (pressed_char == "=") {
+            operand_arr.push(operand_build);
+            equal_is_entered(operand_arr,operators_arr);
+            operand_build = "";
+        }
+    }
+    console.log("After:{" + operators_arr.toString() +"}, {"
+    + operand_arr.toString()+"}");
 }
 
 function remove_op_and_operand_pair(operands, operators) {
@@ -166,6 +174,9 @@ function calculate(operator, leftOperand, rightOperand) {
     } else if (operator == "*") {
         return (leftOperand * rightOperand);
     } else if (operator == "/") {
+        if (leftOperand || rightOperand == 0) {
+            return "Error";
+        }
         return (leftOperand / rightOperand);
     } 
 }
@@ -182,13 +193,26 @@ function percentageNumber() {
     display_window.innerHTML = number/100;
 }
 
-function reset_calculator(button, operand, operand_arr, operators_arr) {
-    button.addEventListener('dblclick', function() {
-        operand_arr.length = 0;
-        operators_arr.length = 0;
-        operand = "";
-    })
+function reset_calculator(operand, operand_arr, operators_arr) {
+    console.log("reset calculator");  
+    operand_arr.length = 0;
+    operators_arr.length = 0;
+    operand = "";
 }
+
+function clearCurrentNumber(operand) {
+    console.log("clear current num");
+    operand = "";
+}
+
+body = document.querySelector('body');
+body.addEventListener('keypress', handle_keypress);
+
+function handle_keypress(event){
+    console.log(event);
+    handle_key(event.key);
+}
+
    
-displayValue();
+setup();
 
